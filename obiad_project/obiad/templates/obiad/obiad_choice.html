@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rezerwacja</title>
+
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+     <!-- ... reszta kodu nagłówka ... -->
+</head>
+<body>
+    <div class="container">
+        <h2>Wybierz opcję:</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn" type="submit">Zapisz wybór</button>
+        </form>
+        <p><a class="btn" href="{% url 'obiad:index' %}">Powrót do strony głównej</a></p>
+    </div>
+</body>
+</html>

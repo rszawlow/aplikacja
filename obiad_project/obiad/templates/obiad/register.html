@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rejestracja</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h2>Rejestracja</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn" type="submit">Zarejestruj się</button>
+        </form>
+        <p><a class="btn" href="{% url 'obiad:user_login' %}">Do strony logowania</a></p>
+        <p><a class="btn" href="{% url 'obiad:index' %}">Powrót do strony głównej</a></p>
+    </div>
+</body>
+</html>

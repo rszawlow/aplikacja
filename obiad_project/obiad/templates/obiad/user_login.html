@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logowanie</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h2>Logowanie</h2>
+        <form method="post">
+            {% csrf_token %}
+            <label for="username">Nazwa użytkownika:</label>
+            <input type="text" name="username" required>
+            <br>
+            <label for="password">Hasło:</label>
+            <input type="password" name="password" required>
+            <br>
+            <button type="submit">Zaloguj się</button>
+        </form>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% if messages %}
+            <div class="success-message">
+                {% for message in messages %}
+                    {% if message.tags == 'success' and message.extra_tags == 'registration_success' %}
+                        {{ message }}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+        <!-- Wyświetlanie błędu -->
+        {% if messages %}
+            <div class="error-message">
+                {% for message in messages %}
+                    {% if message.tags == 'error' and message.extra_tags == 'login_error' %}
+                        {{ message }}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <p>Nie masz jeszcze konta? <a class="btn" href="{% url 'obiad:register' %}">Zarejestruj się</a></p>
+        <p><a class="btn" href="{% url 'obiad:index' %}">Powrót do strony głównej</a></p>
+    </div>
+</body>
+</html>
+
