@@ -4,20 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>rezerwacja</title>
-
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
-     <!-- ... reszta kodu nagłówka ... -->
 </head>
 <body>
     <div class="container">
-        <h2>Wybierz opcję:</h2>
+        <!-- ... Twój kod nagłówka ... -->
+        <h2>Wybór obiadu</h2>
         <form method="post">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button class="btn" type="submit">Zapisz wybór</button>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Śniadanie</th>
+                        <th>Obiad</th>
+                        <th>Kolacja</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for day in all_days %}
+                    <tr>
+                        <td>{{ day }}</td>
+                        <td>
+                            <input type="checkbox" name="want_sniadanie_{{ day }}" {% if obiad_choice.want_sniadanie and obiad_choice.date == day %}checked{% endif %}>
+                        </td>
+                        <td>
+                            <input type="checkbox" name="want_obiad_{{ day }}" {% if obiad_choice.want_obiad and obiad_choice.date == day %}checked{% endif %}>
+                        </td>
+                        <td>
+                            <input type="checkbox" name="want_kolacja_{{ day }}" {% if obiad_choice.want_kolacja and obiad_choice.date == day %}checked{% endif %}>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <button type="submit">Zapisz wybór</button>
         </form>
         <p><a class="btn" href="{% url 'obiad:index' %}">Powrót do strony głównej</a></p>
     </div>
+    
+
 </body>
 </html>

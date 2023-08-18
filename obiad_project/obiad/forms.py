@@ -1,9 +1,7 @@
 from django import forms
-from .models import ObiadChoice
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from .models import MealChoice
 
-class ObiadChoiceForm(forms.ModelForm):
+class MealChoiceForm(forms.ModelForm):
     class Meta:
-        model = ObiadChoice
-        fields = ['want_obiad']
+        model = MealChoice
+        fields = ['want_obiad','want_sniadanie','want_kolacja', 'date']  

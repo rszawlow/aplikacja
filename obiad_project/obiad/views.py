@@ -1,12 +1,13 @@
 from multiprocessing import AuthenticationError
 from django.http import HttpResponseRedirect
-from .models import ObiadChoice
+from .models import MealChoice
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, authenticate
 from django.contrib.auth import authenticate, login
-from .forms import ObiadChoiceForm
+from .forms import MealChoiceForm
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 def register(request):
     if request.method == 'POST':
@@ -52,16 +53,33 @@ def index(request):
 
 
 
-def obiad_choice(request):
+import datetime
+
+@login_required
+def meal_choice(request):
     user = request.user
-    obiad_choice, created = ObiadChoice.objects.get_or_create(user=user)
+    meal_choice, created = MealChoice.objects.get_or_create(user=user)
+
+    now = datetime.datetime.now()
+    current_time = now.time()
+
+    next_choice_date = now.date()
+
+    # Ograniczenia czasowe dla wszystkich dni tygodnia
+    if current_time > datetime.time(8, 0):
+        next_choice_date += datetime.timedelta(days=1)
+
+    all_days = [(next_choice_date + datetime.timedelta(days=i)).strftime('%Y-%m-%d %A') for i in range(14)]
 
     if request.method == 'POST':
-        form = ObiadChoiceForm(request.POST, instance=obiad_choice)
+        form = MealChoiceForm(request.POST, instance=meal_choice)
         if form.is_valid():
             form.save()
+            meal_choice.last_choice_date = next_choice_date
+            meal_choice.save()
+            return redirect('obiad:obiad_choice')
     else:
-        form = ObiadChoiceForm(instance=obiad_choice)
+        form = MealChoiceForm(instance=meal_choice)
+    
+    return render(request, 'obiad/obiad_choice.html', {'obiad_choice': meal_choice, 'form': form, 'next_choice_date': next_choice_date, 'all_days': all_days})
 
-    context = {'form': form}
-    return render(request, 'obiad/obiad_choice.html', context)
