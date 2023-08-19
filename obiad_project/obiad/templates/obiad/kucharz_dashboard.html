@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ilość osób</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h2>Dashboard kucharza</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Śniadanie</th>
+                    <th>Obiad</th>
+                    <th>Kolacja</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for choice in meal_choices %}
+                <tr>
+                    <td>{{ choice.date }}</td>
+                    <td>{{ choice.num_want_sniadanie }}</td>
+                    <td>{{ choice.num_want_obiad }}</td>
+                    <td>{{ choice.num_want_kolacja }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+    

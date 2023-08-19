@@ -9,7 +9,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- ... Twój kod nagłówka ... -->
         <h2>Wybór obiadu</h2>
         <form method="post">
             {% csrf_token %}
@@ -41,6 +40,7 @@
             </table>
             <button type="submit">Zapisz wybór</button>
         </form>
+        <a class="btn" href="{% url 'obiad:kucharz_dashboard' %}">Panel kucharza</a>
         <p><a class="btn" href="{% url 'obiad:index' %}">Powrót do strony głównej</a></p>
     </div>
     

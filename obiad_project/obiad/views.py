@@ -8,30 +8,19 @@ from django.contrib.auth import authenticate, login
 from .forms import MealChoiceForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from .forms import CustomUserCreationForm
+import locale
+from django.contrib.auth.decorators import user_passes_test
 
 def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            messages.success(request, 'Konto zostało pomyślnie zarejestrowane. Możesz teraz się zalogować.')
             return redirect('obiad:user_login')
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
     return render(request, 'obiad/register.html', {'form': form})
-
-
-#def user_login(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('obiad:obiad_choice')
-        else:
-            messages.error(request, 'Nieprawidłowa nazwa użytkownika lub hasło.')
-    return render(request, 'obiad/user_login.html')
 
 
 def user_login(request):
@@ -80,6 +69,19 @@ def meal_choice(request):
             return redirect('obiad:obiad_choice')
     else:
         form = MealChoiceForm(instance=meal_choice)
-    
+    locale.setlocale(locale.LC_TIME, 'pl_PL')
     return render(request, 'obiad/obiad_choice.html', {'obiad_choice': meal_choice, 'form': form, 'next_choice_date': next_choice_date, 'all_days': all_days})
+
+def is_kucharz(user):
+    return user.groups.filter(name='kucharz').exists()
+
+@user_passes_test(lambda user: user.groups.filter(name='kucharz').exists())
+def kucharz_dashboard(request):
+    meal_choices = MealChoice.objects.all()  # Pobierz wszystkie wybory posiłków
+
+    context = {
+        'meal_choices': meal_choices,
+    }
+
+    return render(request, 'obiad/kucharz_dashboard.html', context)
 
