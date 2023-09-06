@@ -1,3 +1,11 @@
 from django.contrib import admin
+from .models import MealChoice
 
-# Register your models here.
+
+class MealChoiceAdmin(admin.ModelAdmin):
+    list_display = ['user', 'data', 'sniadanie', 'obiad', 'kolacja']
+    list_filter = ['user', 'data']
+
+
+admin.site.register(MealChoice, MealChoiceAdmin)
+

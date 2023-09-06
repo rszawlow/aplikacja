@@ -3,13 +3,20 @@
 <head>    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>rezerwacja</title>
+    <title>Rezerwacja posiłków</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
 </head>
+
+
 <body>
+
     <div class="container">
-        <h2>Wybór obiadu</h2>
+        <h2>Wybór posiłków</h2>
+        <h2>Wybierz posiłki na najbliższe 2 tygodnie</h2>
+        {% if success_message %}
+        <div class="success-message">{{ success_message }}</div>
+        {% endif %}
         <form method="post">
             {% csrf_token %}
             <table>
@@ -22,28 +29,47 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for day in all_days %}
+                    {% for date in dates %}
                     <tr>
-                        <td>{{ day }}</td>
-                        <td>
-                            <input type="checkbox" name="want_sniadanie_{{ day }}" {% if obiad_choice.want_sniadanie and obiad_choice.date == day %}checked{% endif %}>
-                        </td>
-                        <td>
-                            <input type="checkbox" name="want_obiad_{{ day }}" {% if obiad_choice.want_obiad and obiad_choice.date == day %}checked{% endif %}>
-                        </td>
-                        <td>
-                            <input type="checkbox" name="want_kolacja_{{ day }}" {% if obiad_choice.want_kolacja and obiad_choice.date == day %}checked{% endif %}>
-                        </td>
+                        <td>{{ date }}</td>
+                        <td><input type="checkbox" class="meal-checkbox" name="sniadanie_{{ date }}" /></td>
+                        <td><input type="checkbox" class="meal-checkbox" name="obiad_{{ date }}" /></td>
+                        <td><input type="checkbox" class="meal-checkbox" name="kolacja_{{ date }}" /></td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
-            <button type="submit">Zapisz wybór</button>
+            <button type="submit">Zapisz</button>
         </form>
+
+        {% if user_choices %}
+        <h2>Twoje aktualne wybory:</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Śniadanie</th>
+                    <th>Obiad</th>
+                    <th>Kolacja</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for choice in user_choices %}
+                <tr>
+                    <td>{{ choice.data }}</td>
+                    <td>{% if choice.sniadanie %}Tak{% else %}Nie{% endif %}</td>
+                    <td>{% if choice.obiad %}Tak{% else %}Nie{% endif %}</td>
+                    <td>{% if choice.kolacja %}Tak{% else %}Nie{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
         <a class="btn" href="{% url 'obiad:kucharz_dashboard' %}">Panel kucharza</a>
         <p><a class="btn" href="{% url 'obiad:index' %}">Powrót do strony głównej</a></p>
     </div>
-    
+
 
 </body>
 </html>
